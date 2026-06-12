@@ -15,6 +15,7 @@ public class WeaponManager : MonoBehaviour
     void Start()
     {
         equipCanonButton.onClick.AddListener(() => { EquipWeapon(canonData);});
+        equipCanonButton.onClick.AddListener(() => { EquipWeapon(laserData);});
         coreAI.currentWeapon = canonData;
     }
 
