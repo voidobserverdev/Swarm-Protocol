@@ -7,7 +7,7 @@ public class CoreAI : MonoBehaviour
     [SerializeField] private Transform firePoint;
 
     public WeaponData currentWeapon;
-    private float attackTimer;
+    private float timer = 0f;
 
     public enum CoreState
     {
@@ -36,19 +36,17 @@ public class CoreAI : MonoBehaviour
 
     void SearchForTarget()
     {
-        // 1. Draw an invisible radar bubble using the current weapon's range
         Collider[] hits = Physics.OverlapSphere(transform.position, currentWeapon.weaponRange);
 
-        float closestDistance = Mathf.Infinity;
+        float closestDistance = 1000f;
         GameObject closestEnemy = null;
 
-        // 2. Loop through every single object the bubble touched
+        //Loop through every single object the bubble touched
         foreach (Collider hit in hits)
         {
-            // 3. Only care about objects tagged "Enemy"
             if (hit.CompareTag("Enemy"))
             {
-                // 4. Calculate if this enemy is closer than the last one we checked
+                // Get the closest enemy
                 float distanceToEnemy = Vector3.Distance(transform.position, hit.transform.position);
                 if (distanceToEnemy < closestDistance)
                 {
@@ -58,7 +56,7 @@ public class CoreAI : MonoBehaviour
             }
         }
 
-        // 5. If our loop found a valid enemy, lock on and start Tracking!
+        //Change state to Tracking after finding closest enemy
         if (closestEnemy != null)
         {
             target = closestEnemy;
@@ -74,16 +72,14 @@ public class CoreAI : MonoBehaviour
 
     void ExecuteAttack()
     {
-        attackTimer -= Time.deltaTime;
-        if (attackTimer <= 0)
+        timer += Time.deltaTime;
+        if (timer >= currentWeapon.fireRate)
         {
             GameObject currentProjectile = objectPool.GetProjectile();
-            currentProjectile.transform.position = firePoint.transform.position;
-            currentProjectile.transform.rotation = firePoint.transform.rotation;
-
+            currentProjectile.transform.SetPositionAndRotation(firePoint.transform.position, firePoint.transform.rotation);
             currentProjectile.GetComponent<Renderer>().material.color = currentWeapon.projectileColor;
 
-            attackTimer = currentWeapon.fireRate;
+            timer = 0f;
         }
 
         if (!target.activeInHierarchy)
