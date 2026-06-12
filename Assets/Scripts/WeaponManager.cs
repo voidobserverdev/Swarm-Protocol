@@ -3,31 +3,24 @@ using UnityEngine.UI;
 
 public class WeaponManager : MonoBehaviour
 {
-    [SerializeField] private Button swapWeaponButton;
     [SerializeField] private CoreAI coreAI;
+
+    [SerializeField] private Button equipLaserButton;
+    [SerializeField] private Button equipCanonButton;
+    
     [SerializeField] private WeaponData canonData;
     [SerializeField] private WeaponData laserData;
 
 
     void Start()
     {
-        swapWeaponButton.onClick.AddListener(() =>
-        {
-            SwapWeapon();
-        });
+        equipCanonButton.onClick.AddListener(() => { EquipWeapon(canonData)});
         coreAI.currentWeapon = canonData;
     }
 
-    void SwapWeapon()
+    void EquipWeapon(WeaponData weaponData)
     {
-        if (coreAI.currentWeapon == canonData)
-        {
-            coreAI.currentWeapon = laserData;
-        }
-        else
-        {
-            coreAI.currentWeapon = canonData;
-        }
+        coreAI.currentWeapon = weaponData;
     }
 
 }
