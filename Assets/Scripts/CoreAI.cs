@@ -44,7 +44,7 @@ public class CoreAI : MonoBehaviour
         //Loop through every single object the bubble touched
         foreach (Collider hit in hits)
         {
-            if (hit.CompareTag("Enemy"))
+            if (hit.gameObject.CompareTag("Enemy"))
             {
                 // Get the closest enemy
                 float distanceToEnemy = Vector3.Distance(transform.position, hit.transform.position);
